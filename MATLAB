@@ -1,0 +1,60 @@
+function taylor_erf()
+    
+    x = linspace(0, 1, 1000);
+
+    figure(1);
+    hold on;
+  
+    true_erf = erf(x);%real value of error function using inbuilt funtion
+    plot(x, true_erf, 'k-', 'LineWidth', 2, 'DisplayName', 'True erf(x)');
+    
+    % Taylor series till n=11
+    taylor_erf_11 = erf_taylor(x, 11);
+    plot(x, taylor_erf_11, 'r', 'LineWidth', 2, 'DisplayName', 'Taylor n=10');
+    
+    % Taylor series till n=21
+    taylor_erf_21 = erf_taylor(x, 21);
+    plot(x, taylor_erf_21, 'g', 'LineWidth', 1.5, 'DisplayName', 'Taylor n=20');
+    
+    taylor_erf_6=erf_taylor(x,6);
+
+    taylor_erf_16=erf_taylor(x,16);
+    
+
+    title('Error Function and Taylor Approximations');
+    xlabel('x');
+    ylabel('erf(x)');
+    legend('Location', 'northwest');
+    grid on;
+    hold off;
+    
+    figure(2);
+    hold on;
+    
+    %for n=11
+    abs_err_11 = abs(true_erf - erf_taylor(x, 11));
+    semilogy(x, abs_err_11, 'r', 'LineWidth', 1.5, 'DisplayName', 'n=11');
+    
+    %for n=21
+    abs_err_21 = abs(true_erf - erf_taylor(x, 21));
+    semilogy(x, abs_err_21, 'g', 'LineWidth', 1.5, 'DisplayName', 'n=21');
+    
+    abs_err_6 = abs(true_erf-erf_taylor(x,6));
+    semilogy(x, abs_err_6, 'b', 'LineWidth', 1.5, 'DisplayName', 'n=6');
+    abs_err_16 = abs(true_erf - erf_taylor(x, 16));
+    semilogy(x, abs_err_16, 'c', 'LineWidth', 1.5, 'DisplayName', 'n=16');
+    title('Absolute Error of Taylor Approximations');
+    xlabel('x');
+    ylabel('Absolute Error(in log scale)');
+    legend('Location', 'northwest');
+    grid on;
+    hold off;
+end
+function y = erf_taylor(x, n)
+    y = zeros(size(x));
+    for k = 0:n
+        term = (-1)^k * x.^(2*k+1) / (factorial(k) * (2*k+1));
+        y = y + term;
+    end
+    y = (2/sqrt(pi)) * y;
+end
